@@ -325,7 +325,6 @@ else
             echo -e "\e[32mkali-chroot$ /usr/bin/apt-get -y dist-upgrade\e[0m"
             LANG=C DEBIAN_FRONTEND=noninteractive PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin $busybox chroot $mnt /usr/bin/apt-get -y dist-upgrade
             LANG=C DEBIAN_FRONTEND=noninteractive PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin $busybox chroot $mnt /usr/bin/apt-get -y install "$3"
-         fi
             echo -e "\e[32mkali-chroot$ /usr/bin/apt-get -y dist-upgrade\e[0m"
             LANG=C DEBIAN_FRONTEND=noninteractive PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin $busybox chroot $mnt /usr/bin/apt-get -y dist-upgrade
             echo -e "\e[32m"
