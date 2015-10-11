@@ -83,8 +83,8 @@ public class ChrootManagerFragment extends Fragment {
     // private static final String URI = "http://images.offensive-security.com/" + FILENAME;
     private static final String URI = "http://images.offensive-security.com/" + FILENAME;
     private static final String SHA512 =
-            "40d2c01503b458cf4796be54805ad8a8ef5c425e2f5f65178d0dc5626227163fe1bcceb61fbd" +
-                    "408bdd5fcabac55844173f02f1fbf1f24f9f47f34dcc170b16aa";
+            "dacff65c8d91014e4f787cc255450644625624bd8af6309ac80409b6e02bd819f6e12c83425d9" +
+                    "d9275e663bab8ce370a402cbc3a126f1bf698696828359c9582";
     private static final String OLD_CHROOT_PATH = "/data/local/kali-armhf/";
 
     String zipFilePath;
