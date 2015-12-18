@@ -239,6 +239,12 @@ public class AppNavHomeActivity extends AppCompatActivity {
                                         .addToBackStack(null)
                                         .commit();
                                 break;
+                            case R.id.kismetlauncher_item:
+                                fragmentManager
+                                        .beginTransaction()
+                                        .replace(R.id.container, KismetFragment.newInstance(itemId))
+                                        .addToBackStack(null)
+                                        .commit();
                             case R.id.kaliservices_item:
                                 fragmentManager
                                         .beginTransaction()

@@ -85,6 +85,7 @@
     <string name="KaliLauncherLabel">Kali Launcher</string>
     <string name="launch_kali_menu">Launch Kali Menu in Terminal</string>
     <string name="launch_kali_shell">Launch Kali Shell in Terminal</string>
+    <string name="launch_kismet">Launch Kismet</string>
     <string name="launch_wifite">Launch Wifite</string>
     <string name="kill_kali">Shutdown Kali</string>
     <string name="update_kali_chroot">Update Kali chroot</string>
@@ -225,6 +226,7 @@
     <string name="drawertitlecreatechroot">Kali Chroot Manager</string>
     <string name="drawertitlekalilauncher">Kali Launcher</string>
     <string name="drawertitlekaliservices">Kali Services</string>
+    <string name="drawertitlekismetlauncher">Kismet Launcher</string>
     <string name="drawertitlehid">HID</string>
     <string name="drawertitleduckhunter">Duckhunter</string>
     <string name="drawertitlebadusb">Bad USB</string>

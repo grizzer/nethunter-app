@@ -18,5 +18,11 @@
     <item name="darkTitle" type="color">#444</item>
     <item name="darkText" type="color">#888</item>
 
+    <item name="material_blue_grey_800" type="color">#ff37474f</item>
+    <item name="material_blue_grey_950" type="color">#ff21272b</item>
+
+    <item name="wlan1Up" type="color">#FF00FF00</item>
+    <item name="wlan1Down" type="color">#FFFF0000</item>
+
 
 </resources>

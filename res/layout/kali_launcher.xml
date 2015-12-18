@@ -43,7 +43,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/launch_kali_menu"
                 android:textColor="#ffffffff" />
-
             <Button
                 android:id="@+id/button_launch_wifite"
                 android:layout_weight="1"

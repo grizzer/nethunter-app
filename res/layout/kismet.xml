@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
+        <TextView
+            android:id="@+id/wlan1status"
+            android:layout_alignParentTop="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/base_listItem_LR"
+            android:layout_marginBottom="30dp"
+            android:text="WLan1 Status"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentStart="true"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Switch
+            android:id="@+id/enablegps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/packettext"
+            android:layout_marginLeft="@dimen/base_listItem_LR"
+            android:layout_gravity="center_vertical"
+            android:layout_below="@id/wlan1status"
+            android:clickable="true" />
+        <Switch
+            android:id="@+id/enablepacketlogging"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/packettext"
+            android:layout_marginLeft="@dimen/base_listItem_LR"
+            android:layout_gravity="center_vertical"
+            android:layout_below="@id/enablegps"
+            android:clickable="true" />
+        <TextView
+            android:text="Enable GPS"
+            android:id="@+id/gpstext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/base_listItem_LR"
+            android:layout_gravity="center_vertical"
+            android:layout_below="@id/wlan1status"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_alignParentStart="true" />
+        <TextView
+            android:text="Packet Logging"
+            android:id="@+id/packettext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_alignParentStart="false"
+            android:layout_below="@id/enablegps"
+            android:layout_alignStart="@id/gpstext" />
+
+        <TextView
+            android:text="Config File:"
+            android:id="@+id/configtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_alignParentStart="false"
+            android:layout_alignStart="@id/gpstext"
+            android:layout_alignBaseline="@+id/configPath" />
+
+        <EditText
+            android:id="@+id/configPath"
+            android:text="/etc/kismet/kismet.conf"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_toEndOf="@+id/configtext"
+            android:layout_marginTop="@dimen/base_listItem_TB"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentBottom="false"
+            android:layout_below="@+id/enablepacketlogging"
+            android:layout_marginLeft="@dimen/base_listItem_LR" />
+
+    </RelativeLayout>
+    <Button
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Launch"
+        android:id="@+id/launchkismetbutton"
+        android:layout_alignBottom="@+id/enablegps"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:textAlignment="center" />
+
+
+</LinearLayout>
