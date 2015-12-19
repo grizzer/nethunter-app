@@ -3,6 +3,7 @@ package com.offsec.nethunter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -13,11 +14,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Switch;
 import android.widget.Toast;
 
 import com.offsec.nethunter.utils.ShellExecuter;
+import com.offsec.nethunter.BlueNMEA.TCPServer;
 
 
 public class KismetFragment extends Fragment{
@@ -52,6 +55,7 @@ public class KismetFragment extends Fragment{
         Switch packetSwitch = (Switch) rootView.findViewById(R.id.enablepacketlogging);
         Button launch = (Button) rootView.findViewById(R.id.launchkismetbutton);
         EditText configPath = (EditText) rootView.findViewById(R.id.configPath);
+        final RadioGroup gpsSource = (RadioGroup) rootView.findViewById(R.id.provider);
 
         final SharedPreferences prefs = getContext().getSharedPreferences("kismetPrefs", Context.MODE_PRIVATE);
         gpsSwitch.setChecked(prefs.getBoolean("enableGps", false));
@@ -62,6 +66,11 @@ public class KismetFragment extends Fragment{
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 prefs.edit().putBoolean("enableGps", isChecked);
+                prefs.edit().apply();
+                if(isChecked)
+                    gpsSource.setVisibility(View.VISIBLE);
+                else
+                    gpsSource.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -109,7 +118,7 @@ public class KismetFragment extends Fragment{
         Boolean wlan1 = !(exe.RunAsRootOutput("ip addr | grep wlan1").isEmpty());
         TextView wlanStat = (TextView) rootView.findViewById(R.id.wlan1status);
         if(wlan1){
-            wlanStat.setText("Wlan1 is Up");
+            wlanStat.setText("Wlan1 is up");
             wlanStat.setTextColor(upColor);
         } else {
             wlanStat.setText("Wlan1 is not found");

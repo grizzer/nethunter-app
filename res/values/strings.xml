@@ -318,6 +318,31 @@
     <string name="extract_part1">Uncompressing the Chroot... (~10 min)</string>
     <string name="extract_part2">Deploying the Chroot... (~5-10 min)</string>
 
+
+    <!-- Blue NMEA Strings -->
+    <string name="provider_label">Provider:</string>
+    <string name="gps_provider">GPS</string>
+    <string name="network_provider">Network</string>
+    <string name="provider_status_label">Provider status:</string>
+    <string name="tcp_status_label">TCP status:</string>
+    <string name="listen">Listen</string>
+    <string name="accept">Accept</string>
+    <string name="connect">Connect</string>
+    <string name="disconnect_all">Disconnect all</string>
+    <string name="scanning">Scanning for Bluetooth devices</string>
+    <string name="select_a_device">Select a device to connect to:</string>
+    <string name="no_devices">No Bluetooth devices were found.</string>
+    <string name="no_bluetooth">Please enable Bluetooth.</string>
+
+    <string name="status_error">error</string>
+    <string name="status_unknown">unknown</string>
+    <string name="status_waiting">waiting</string>
+    <string name="status_ok">ok</string>
+    <string name="status_disabled">disabled</string>
+    <string name="status_enabled">enabled</string>
+    <string name="status_unavailable">unavailable</string>
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
