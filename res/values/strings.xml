@@ -135,6 +135,7 @@
     <string name="ps_payload_url">URL to payload</string>
 
     <string name="toast_install_terminal">Error launching intent. Install Android Terminal!</string>
+    <string name="toast_install_BlueNMEA">Error using GPS. Install BlueNMEA!</string>
     <string name="descriptiontext" />
 
     <string name="macchanger_description">Change the MAC of any network interface.\n\nIt can be randomly generated or manually typed. \n\nThe MAC must contain 6 pair of combinations using the charset: [0–9|A-F|a-f] something like:\n\n 00:11:22:ab:cd:ef </string>

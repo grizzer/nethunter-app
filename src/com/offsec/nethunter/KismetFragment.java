@@ -1,6 +1,7 @@
 package com.offsec.nethunter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,6 +23,9 @@ import android.widget.Toast;
 import com.offsec.nethunter.utils.ShellExecuter;
 import com.offsec.nethunter.BlueNMEA.TCPServer;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 
 public class KismetFragment extends Fragment{
 
@@ -29,6 +33,9 @@ public class KismetFragment extends Fragment{
     private static final String TAG = "KaliLauncherFragment";
     ShellExecuter exe = new ShellExecuter();
     int upColor, downColor;
+    private String gpsString="(socat TCP:127.0.0.1:4352 PTY,link=/tmp/gps & gpsd -n /tmp/gps) & ";
+    Switch gpsSwitch;
+    Switch packetSwitch;
 
     public KismetFragment() {
 
@@ -51,8 +58,8 @@ public class KismetFragment extends Fragment{
 
         setWlan1Stat(rootView);
 
-        Switch gpsSwitch = (Switch) rootView.findViewById(R.id.enablegps);
-        Switch packetSwitch = (Switch) rootView.findViewById(R.id.enablepacketlogging);
+        gpsSwitch = (Switch) rootView.findViewById(R.id.enablegps);
+        packetSwitch = (Switch) rootView.findViewById(R.id.enablepacketlogging);
         Button launch = (Button) rootView.findViewById(R.id.launchkismetbutton);
         EditText configPath = (EditText) rootView.findViewById(R.id.configPath);
         final RadioGroup gpsSource = (RadioGroup) rootView.findViewById(R.id.provider);
@@ -127,7 +134,28 @@ public class KismetFragment extends Fragment{
     }
 
     public void launchKismet(){
-        Toast toast = Toast.makeText(getContext(), "Kismet To-Do", Toast.LENGTH_SHORT);
-        toast.show();
+        String launchstring = "kismet -g -t Kismet-" + DateFormat.getDateTimeInstance().format(new Date());
+
+        if(gpsSwitch.isChecked()) {
+            launchstring = gpsString + launchstring;
+            try {
+                Intent intent = new Intent("name.kellermann.max.bluenmea.MAIN");
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                startActivity(intent);
+            } catch (Exception e) {
+                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.toast_install_BlueNMEA), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        try {
+            Intent intent =
+                    new Intent("com.offsec.nhterm.RUN_SCRIPT_NH");
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+
+            intent.putExtra("com.offsec.nhterm.iInitialCommand", launchstring);
+            startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.toast_install_terminal), Toast.LENGTH_SHORT).show();
+        }
     }
 }
