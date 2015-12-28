@@ -21,35 +21,6 @@
             android:layout_alignParentStart="true"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <RadioGroup
-            android:id="@+id/provider"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignTop="@+id/gpstext"
-            android:layout_toEndOf="@id/enablegps"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="false"
-            android:gravity="center_horizontal"
-            android:visibility="invisible">
-            <TextView
-                android:text="@string/provider_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <RadioButton
-                android:id="@+id/gps_provider"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/gps_provider"/>
-            <RadioButton
-                android:id="@+id/network_provider"
-                android:text="@string/network_provider"
-                android:checked="false"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </RadioGroup>
-
         <Switch
             android:id="@+id/enablegps"
             android:layout_width="wrap_content"
@@ -112,6 +83,36 @@
             android:layout_alignParentBottom="false"
             android:layout_below="@+id/enablepacketlogging"
             android:layout_marginLeft="@dimen/base_listItem_LR" />
+
+
+        <RadioGroup
+            android:id="@+id/provider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignTop="@+id/gpstext"
+            android:layout_toEndOf="@id/enablegps"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="false"
+            android:gravity="center_horizontal"
+            android:visibility="visible">
+            <TextView
+                android:text="@string/provider_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <RadioButton
+                android:id="@+id/gps_provider"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/gps_provider"/>
+            <RadioButton
+                android:id="@+id/network_provider"
+                android:text="@string/network_provider"
+                android:checked="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RadioGroup>
 
     </RelativeLayout>
     <Button
