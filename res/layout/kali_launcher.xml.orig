@@ -1,0 +1,112 @@
+<LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/launcher_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+<<<<<<< HEAD
+
+            <Button
+                android:id="@+id/button_start_kali"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/launch_kali_shell"
+                android:textColor="#ffffffff" />
+            <Button
+                android:id="@+id/button_start_su"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Launch Android SU Shell"
+                android:textColor="#ffffffff" />
+            <Button
+                android:id="@+id/button_start_android"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Launch Android Shell"
+                android:textColor="#ffffffff" />
+=======
+            <Button
+                android:id="@+id/add_Button"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_button"
+                android:clickable="true"
+                android:textColor="#ff95ff84" />
+
+            <Button
+                android:id="@+id/button_start_kali"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/launch_kali_shell"
+                android:textColor="#ffffffff" />
+
+>>>>>>> upstream/master
+            <Button
+                android:id="@+id/button_start_kalimenu"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/launch_kali_menu"
+                android:textColor="#ffffffff" />
+
+            <Button
+                android:id="@+id/button_launch_wifite"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/launch_wifite"
+                android:clickable="true"
+                android:textColor="#ffffffff" />
+            <Button
+                android:id="@+id/update_kali_chroot"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/update_kali_chroot"
+                android:clickable="true"
+                android:textColor="#ffffffff" />
+            <Button
+                android:id="@+id/turn_off_external_wifi"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/turn_off_external_wifi"
+                android:clickable="true"
+                android:textColor="#ffffffff" />
+            <Button
+                android:id="@+id/kali_dumpmifare"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/kali_dumpmifare"
+                android:clickable="true"
+                android:textColor="#ffffffff" />
+<<<<<<< HEAD
+=======
+            <Button
+                android:id="@+id/shutdown_kali"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/shutdown_kali"
+                android:clickable="true"
+                android:textColor="#ffffffff" />
+>>>>>>> upstream/master
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
