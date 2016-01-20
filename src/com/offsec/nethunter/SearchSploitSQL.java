@@ -74,12 +74,21 @@ class SearchSploitSQL extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + SearchSploit.TABLE);
     }
 
+    private Boolean checkExploitDB() {
+        String _cmd = "su -c bootkali custom_cmd dpkg -s exploitdb";
+        return exe.RunAsRootOutput(_cmd).contains("Status: install ok installed");
+    }
+
     public Boolean doDbFeed() {
-        // copy csv to /sdcard as temp (so we can read it)
-        String _cmd = "su -c bootkali custom_cmd csv2sqlite.py /usr/share/exploitdb/files.csv /sdcard/nh_files/SearchSploit "+ SearchSploit.TABLE;
-        // move to app db folder
-        exe.RunAsRootOutput(_cmd);
-        return true;
+        if(checkExploitDB()) {
+            // copy csv to /sdcard as temp (so we can read it)
+            String _cmd = "su -c bootkali custom_cmd csv2sqlite.py /usr/share/exploitdb/files.csv /sdcard/nh_files/SearchSploit " + SearchSploit.TABLE;
+            // move to app db folder
+            exe.RunAsRootOutput(_cmd);
+            return true;
+        }
+        else
+            return false;
     }
     public long getCount() {
         String sql = "SELECT COUNT(*) FROM " + SearchSploit.TABLE;
